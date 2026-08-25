@@ -4,14 +4,14 @@ const NAV = [
   { id: 'alerts', label: 'Reorder', icon: AlertIcon },
 ]
 
-export default function Sidebar({ view, onChange, alertCount }) {
+export default function Sidebar({ view, onChange, alertCount, user, onSignOut }) {
   return (
     <aside className="sidebar">
       <div className="brand">
         <span className="brand-mark" aria-hidden="true" />
         <div>
-          <strong>Northline</strong>
-          <p>Warehouse demo</p>
+          <strong>Corner Mart</strong>
+          <p>Mini supermarket</p>
         </div>
       </div>
       <nav className="nav">
@@ -34,7 +34,11 @@ export default function Sidebar({ view, onChange, alertCount }) {
         })}
       </nav>
       <div className="sidebar-foot">
-        <p>Local demo data. Changes stay in this browser session.</p>
+        <p className="sidebar-user">{user.name}</p>
+        <p>{user.email}</p>
+        <button className="text-btn sign-out" type="button" onClick={onSignOut}>
+          Sign out
+        </button>
       </div>
     </aside>
   )

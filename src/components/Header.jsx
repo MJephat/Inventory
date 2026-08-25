@@ -1,7 +1,7 @@
 const TITLES = {
-  dashboard: { kicker: 'Control tower', title: 'Inventory overview' },
+  dashboard: { kicker: 'Store floor', title: 'Aisle overview' },
   inventory: { kicker: 'Catalog', title: 'On-hand stock' },
-  alerts: { kicker: 'Exceptions', title: 'Reorder queue' },
+  alerts: { kicker: 'Restock', title: 'Reorder queue' },
 }
 
 export default function Header({ view, query, onQuery, onAdd }) {
@@ -23,12 +23,12 @@ export default function Header({ view, query, onQuery, onAdd }) {
             <input
               value={query}
               onChange={(event) => onQuery(event.target.value)}
-              placeholder="Search SKU, name, or bin"
+              placeholder="Search SKU, name, or aisle"
             />
           </label>
         )}
         <button className="btn primary" type="button" onClick={onAdd}>
-          Add item
+          Add product
         </button>
       </div>
     </header>

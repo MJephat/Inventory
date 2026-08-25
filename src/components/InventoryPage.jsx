@@ -36,7 +36,7 @@ export default function InventoryPage({
             <tr>
               <th>SKU</th>
               <th>Item</th>
-              <th>Location</th>
+              <th>Aisle</th>
               <th>On hand</th>
               <th>Value</th>
               <th>Status</th>

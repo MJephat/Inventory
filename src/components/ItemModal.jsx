@@ -4,7 +4,7 @@ import { todayIso } from '../data/inventory.js'
 const empty = {
   id: '',
   name: '',
-  category: 'Electronics',
+  category: 'Produce',
   location: '',
   qty: 0,
   reorderPoint: 5,
@@ -30,7 +30,7 @@ export default function ItemModal({
   function submit(event) {
     event.preventDefault()
     if (!form.id.trim() || !form.name.trim() || !form.location.trim()) {
-      setError('SKU, name, and location are required.')
+      setError('SKU, name, and aisle are required.')
       return
     }
     if (mode === 'create' && existingIds.includes(form.id.trim())) {
@@ -53,7 +53,7 @@ export default function ItemModal({
     <div className="overlay" onClick={onClose} role="presentation">
       <form className="modal" onClick={(event) => event.stopPropagation()} onSubmit={submit}>
         <div className="modal-head">
-          <h2>{mode === 'create' ? 'New stock item' : 'Edit item'}</h2>
+          <h2>{mode === 'create' ? 'New product' : 'Edit product'}</h2>
           <button className="icon-btn" type="button" onClick={onClose} aria-label="Close">
             ×
           </button>
@@ -76,7 +76,7 @@ export default function ItemModal({
               ))}
             </select>
           </Field>
-          <Field label="Location">
+          <Field label="Aisle / shelf">
             <input value={form.location} onChange={(event) => setField('location', event.target.value)} />
           </Field>
           <Field label="Quantity">
@@ -95,11 +95,11 @@ export default function ItemModal({
               onChange={(event) => setField('reorderPoint', event.target.value)}
             />
           </Field>
-          <Field label="Unit cost (USD)">
+          <Field label="Unit cost (KES)">
             <input
               type="number"
               min="0"
-              step="0.01"
+              step="1"
               value={form.unitCost}
               onChange={(event) => setField('unitCost', event.target.value)}
             />

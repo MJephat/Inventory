@@ -5,7 +5,7 @@ export default function AlertsPage({ alerts, onEdit, onAdjust }) {
     return (
       <div className="panel empty-panel">
         <h2>Nothing waiting</h2>
-        <p>Every SKU is above its reorder point. Receive stock or drop a threshold to see this queue fill up.</p>
+        <p>Every product is above its reorder point. Receive a delivery or drop a threshold to fill this queue.</p>
       </div>
     )
   }
@@ -13,7 +13,8 @@ export default function AlertsPage({ alerts, onEdit, onAdjust }) {
   return (
     <div className="stack">
       <p className="lede">
-        {alerts.length} SKU{alerts.length === 1 ? '' : 's'} are at or below reorder point.
+        {alerts.length} product{alerts.length === 1 ? '' : 's'} {alerts.length === 1 ? 'is' : 'are'} at or
+        below reorder point.
       </p>
       <ul className="card-grid">
         {alerts.map((item) => {

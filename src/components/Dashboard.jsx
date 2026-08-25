@@ -8,13 +8,13 @@ export default function Dashboard({ items, alerts, onOpenAlerts, onOpenInventory
   return (
     <div className="stack">
       <section className="stat-grid">
-        <Stat label="SKUs tracked" value={items.length} hint="Live catalog" />
-        <Stat label="Units on hand" value={units} hint="All locations" />
-        <Stat label="Inventory value" value={formatMoney(value)} hint="At unit cost" />
+        <Stat label="Products" value={items.length} hint="Store catalog" />
+        <Stat label="Units on hand" value={units} hint="All aisles" />
+        <Stat label="Stock value" value={formatMoney(value)} hint="At unit cost" />
         <Stat
           label="Need reorder"
           value={alerts.length}
-          hint={`${healthy} SKUs healthy`}
+          hint={`${healthy} products healthy`}
           tone={alerts.length ? 'warn' : 'ok'}
         />
       </section>
@@ -28,7 +28,7 @@ export default function Dashboard({ items, alerts, onOpenAlerts, onOpenInventory
             </button>
           </div>
           {alerts.length === 0 ? (
-            <p className="empty">All SKUs are above their reorder points.</p>
+            <p className="empty">All products are above their reorder points.</p>
           ) : (
             <ul className="alert-list">
               {alerts.slice(0, 5).map((item) => (

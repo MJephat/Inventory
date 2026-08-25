@@ -1,10 +1,12 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import Sidebar from './components/Sidebar.jsx'
 import Header from './components/Header.jsx'
 import Dashboard from './components/Dashboard.jsx'
 import InventoryPage from './components/InventoryPage.jsx'
 import AlertsPage from './components/AlertsPage.jsx'
 import ItemModal from './components/ItemModal.jsx'
+import AuthPage from './components/AuthPage.jsx'
+import { getSession, loadStock, saveStock, signOut } from './auth.js'
 import {
   CATEGORIES,
   INITIAL_ITEMS,
@@ -13,11 +15,19 @@ import {
 } from './data/inventory.js'
 
 export default function App() {
+  const [session, setSession] = useState(() => getSession())
   const [view, setView] = useState('dashboard')
-  const [items, setItems] = useState(INITIAL_ITEMS)
+  const [items, setItems] = useState(() => {
+    const current = getSession()
+    return (current && loadStock(current.email)) || INITIAL_ITEMS
+  })
   const [query, setQuery] = useState('')
   const [category, setCategory] = useState('all')
   const [modal, setModal] = useState(null)
+
+  useEffect(() => {
+    if (session) saveStock(session.email, items)
+  }, [session, items])
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase()
@@ -36,6 +46,20 @@ export default function App() {
     () => items.filter((item) => stockStatus(item) !== 'ok'),
     [items],
   )
+
+  function handleAuth(nextSession) {
+    setSession(nextSession)
+    setItems(loadStock(nextSession.email) || INITIAL_ITEMS)
+    setView('dashboard')
+  }
+
+  function handleSignOut() {
+    signOut()
+    setSession(null)
+    setModal(null)
+    setQuery('')
+    setCategory('all')
+  }
 
   function upsertItem(next) {
     setItems((prev) => {
@@ -67,9 +91,19 @@ export default function App() {
     setModal(null)
   }
 
+  if (!session) {
+    return <AuthPage onAuth={handleAuth} />
+  }
+
   return (
     <div className="app-shell">
-      <Sidebar view={view} onChange={setView} alertCount={alerts.length} />
+      <Sidebar
+        view={view}
+        onChange={setView}
+        alertCount={alerts.length}
+        user={session}
+        onSignOut={handleSignOut}
+      />
       <div className="app-main">
         <Header
           view={view}
