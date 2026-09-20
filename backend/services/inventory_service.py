@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session
 from models.product import Product
 from models.inventory import Inventory
 from models.inventory_transaction import InventoryTransaction
+from core.auth import get_current_user
 
 from schema.inventory import (StockInRequest, StockOutRequest, StockAdjustmentRequest)
 
@@ -15,7 +16,8 @@ class InventoryService:
     @staticmethod
     def stock_in(
         db: Session,
-        data: StockInRequest
+        data: StockInRequest,
+        current_user
     ):
 
         # Check product
@@ -56,6 +58,7 @@ class InventoryService:
         # Record transaction
         transaction = InventoryTransaction(
             product_id=data.product_id,
+            created_by=current_user.id,
             transaction_type="STOCK_IN",
             quantity=data.quantity,
             balance_after=inventory.quantity,
@@ -75,7 +78,8 @@ class InventoryService:
     @staticmethod
     def stock_out(
         db: Session,
-        data: StockOutRequest
+        data: StockOutRequest,
+        current_user
     ):
 
         # Check product
@@ -119,6 +123,7 @@ class InventoryService:
         # Record transaction
         transaction = InventoryTransaction(
             product_id=data.product_id,
+            created_by=current_user.id,
             transaction_type="STOCK_OUT",
             quantity=-data.quantity,
             balance_after=inventory.quantity,
@@ -138,7 +143,9 @@ class InventoryService:
     @staticmethod
     def adjust(
         db: Session,
-        data: StockAdjustmentRequest
+        data: StockAdjustmentRequest,  
+        current_user
+
     ):
 
         # Check product
@@ -180,6 +187,7 @@ class InventoryService:
 
         transaction = InventoryTransaction(
             product_id=data.product_id,
+            created_by=current_user.id,
             transaction_type="ADJUSTMENT",
             quantity=data.quantity,
             balance_after=new_quantity,

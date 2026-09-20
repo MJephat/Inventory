@@ -32,15 +32,23 @@ class InventoryResponse(BaseModel):
 
     model_config = ConfigDict(from_attributes=True)
 
+class TransactionUserResponse(BaseModel):
+    id: UUID
+    username: str
+    full_name: str
+
+    model_config = ConfigDict(from_attributes=True)
 
 class InventoryTransactionResponse(BaseModel):
     id: UUID
     product_id: UUID
+    created_by: UUID | None
     transaction_type: str
     quantity: int
     balance_after: int
     reference: str | None
     reason: str | None
     created_at: datetime
+    user: TransactionUserResponse | None
 
     model_config = ConfigDict(from_attributes=True)
