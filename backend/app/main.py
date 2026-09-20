@@ -3,7 +3,7 @@ from sqlalchemy import text
 
 from core.database import engine
 from core.config import settings
-from routers import category, product
+from routers import category, product, inventory, dashboard
 
 
 app = FastAPI(
@@ -33,7 +33,8 @@ app = FastAPI(
 
 app.include_router(prefix="/api/v1", router = category.router)
 app.include_router(prefix="/api/v1", router = product.router)
-
+app.include_router(prefix="/api/v1", router = inventory.router)
+app.include_router(prefix="/api/v1", router = dashboard.router)
 
 @app.get("/health")
 def health():
