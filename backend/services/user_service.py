@@ -1,9 +1,11 @@
 from sqlalchemy import or_, select
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session,selectinload
 
 from core.security import hash_password, verify_password
 from models.user import User
 from schema.user import UserCreate
+from models.role import Role
+
 
 
 class UserService:
@@ -48,10 +50,13 @@ class UserService:
         password: str
     ):
         user = db.scalar(
-            select(User).where(
-                User.username == username
+            select(User)
+            .options(
+                selectinload(User.roles)
+                .selectinload(Role.permissions)
             )
-        )
+            .where(User.username == username)
+         )
 
         if not user:
             return None

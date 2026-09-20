@@ -2,12 +2,14 @@ from uuid import UUID
 
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, selectinload
+from sqlalchemy import select
 
 from core.database import get_db
 from core.security import decode_access_token
 from services.user_service import UserService
-
+from models.user import User
+from models.role import Role
 
 security = HTTPBearer()
 
@@ -29,9 +31,15 @@ def get_current_user(
                 detail="Invalid authentication token."
             )
 
-        user = UserService.get_user_by_id(
-            db,
-            UUID(user_id)
+        user = db.scalar(
+            select(User)
+            .options(
+                selectinload(User.roles)
+                .selectinload(Role.permissions)
+            )
+            .where(
+                User.id == UUID(user_id)
+            )
         )
 
         if not user:

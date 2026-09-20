@@ -16,16 +16,29 @@ class UserLogin(BaseModel):
     password: str
 
 
+class RoleResponse(BaseModel):
+    id: UUID
+    name: str
+    description: str | None = None
+
+    model_config = ConfigDict(from_attributes=True)
+
+
 class UserResponse(BaseModel):
     id: UUID
     username: str
     email: EmailStr
     full_name: str
-    role: str
+    roles: list[RoleResponse]
     is_active: bool
     created_at: datetime
 
     model_config = ConfigDict(from_attributes=True)
+
+
+class UserLogin(BaseModel):
+    username: str
+    password: str
 
 
 class TokenResponse(BaseModel):

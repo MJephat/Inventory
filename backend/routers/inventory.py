@@ -12,6 +12,7 @@ from core.auth import get_current_user
 from schema.inventory import ( StockInRequest, StockOutRequest, StockAdjustmentRequest, InventoryResponse, InventoryTransactionResponse)
 
 from services.inventory_service import InventoryService
+from core.permissions import require_permission
 
 
 router = APIRouter(prefix="/inventory", tags=["Inventory"])
@@ -21,7 +22,7 @@ router = APIRouter(prefix="/inventory", tags=["Inventory"])
 def stock_in(
     data: StockInRequest,
     db: Session = Depends(get_db),
-    current_user = Depends(get_current_user)
+    current_user = Depends(require_permission("inventory.stock_in"))
 
 ):
     try:
@@ -43,7 +44,7 @@ def stock_in(
 def stock_out(
     data: StockOutRequest,
     db: Session = Depends(get_db),
-    current_user = Depends(get_current_user)
+    current_user = Depends(require_permission("inventory.stock_out"))
 ):
     try:
         return InventoryService.stock_out(
@@ -64,7 +65,7 @@ def stock_out(
 def adjust_stock(
     data: StockAdjustmentRequest,
     db: Session = Depends(get_db),
-    current_user = Depends(get_current_user)
+    current_user = Depends(require_permission("inventory.adjust"))
 ):
 
     try:
@@ -83,7 +84,10 @@ def adjust_stock(
 
 @router.get("", response_model=list[InventoryResponse])
 def get_inventory(
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user=Depends(
+    require_permission("inventory.read")
+)
 ):
 
     return db.scalars(
