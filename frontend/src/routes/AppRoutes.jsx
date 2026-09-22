@@ -3,6 +3,10 @@ import Login from "../pages/auth/login";
 import ProtectedRoute from "./ProtectedRoutes";
 import AppLayout from "../layout/AppLayout";
 import Dashboard from "../pages/dashboard/Dashboard";
+import Products from "../pages/products/products";
+import ProductForm from "../pages/products/ProductForm";
+import Inventory from "../pages/inventory/inventory";
+import InventoryHistory from "../pages/inventory/InventoryHistory";
 
 
 
@@ -20,9 +24,32 @@ export default function AppRoutes() {
           <Route element={<AppLayout />}>
 
             <Route
-              path="/dashboard"
-              element={<Dashboard />}
-            />
+                path="/dashboard"
+                element={<Dashboard />}
+                />
+            <Route
+                path="/products"
+                element={<Products />}
+                />
+            <Route
+                path="/products/new"
+                element={<ProductForm />}
+                />
+            
+            <Route
+                path="/products/:id/edit"
+                element={<ProductForm />}
+                />
+
+            <Route
+                path="/inventory"
+                element={<Inventory />}
+                />
+
+            <Route
+                path="/inventory/:productId/history"
+                element={<InventoryHistory />}
+                />
 
           </Route>
         </Route>
