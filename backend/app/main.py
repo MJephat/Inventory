@@ -3,7 +3,8 @@ from sqlalchemy import text
 
 from core.database import engine
 from core.config import settings
-from routers import category, product, inventory, dashboard, auth, users
+from routers import category, product, inventory, dashboard, auth, users, audit_logs
+from fastapi.middleware.cors import CORSMiddleware
 
 
 app = FastAPI(
@@ -11,25 +12,18 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# @app.get("/debug/database")
-# def debug_database():
 
-#     with engine.connect() as connection:
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
 
-#         result = connection.execute(
-#             text("""
-#                 SELECT
-#                     current_database(),
-#                     current_schema()
-#             """)
-#         )
-
-#         row = result.fetchone()
-
-#         return {
-#             "database": row[0],
-#             "schema": row[1]
-#         }
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 app.include_router(prefix="/api/v1", router = category.router)
 app.include_router(prefix="/api/v1", router = product.router)
@@ -37,6 +31,7 @@ app.include_router(prefix="/api/v1", router = inventory.router)
 app.include_router(prefix="/api/v1", router = dashboard.router)
 app.include_router(prefix="/api/v1", router = auth.router)
 app.include_router(prefix="/api/v1", router = users.router)
+app.include_router(prefix="/api/v1", router = audit_logs.router)
 
 @app.get("/health")
 def health():

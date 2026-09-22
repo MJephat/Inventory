@@ -2,11 +2,12 @@ from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import select
-from sqlalchemy.orm import Session, joinedload
+from sqlalchemy.orm import Session, selectinload, joinedload
 
 from core.database import get_db
 
 from models.inventory import Inventory
+from models.product import Product
 from models.inventory_transaction import InventoryTransaction
 from core.auth import get_current_user
 from schema.inventory import ( StockInRequest, StockOutRequest, StockAdjustmentRequest, InventoryResponse, InventoryTransactionResponse)
@@ -86,14 +87,17 @@ def adjust_stock(
 def get_inventory(
     db: Session = Depends(get_db),
     current_user=Depends(
-    require_permission("inventory.read")
-)
+        require_permission("inventory.read")
+    )
 ):
 
     return db.scalars(
         select(Inventory)
+        .options(
+            selectinload(Inventory.product)
+            .selectinload(Product.category)
+        )
     ).all()
-
 
 @router.get("/{product_id}/history", response_model=list[InventoryTransactionResponse])
 def get_inventory_history(

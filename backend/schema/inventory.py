@@ -3,6 +3,23 @@ from datetime import datetime
 
 from pydantic import BaseModel, Field, ConfigDict
 
+class CategoryResponse(BaseModel):
+    id: UUID
+    name: str
+
+    class Config:
+        from_attributes = True
+
+
+class ProductInventoryResponse(BaseModel):
+    id: UUID
+    sku: str
+    name: str
+    reorder_level: int
+    category: CategoryResponse
+
+    class Config:
+        from_attributes = True
 
 class StockInRequest(BaseModel):
     product_id: UUID
@@ -29,6 +46,7 @@ class InventoryResponse(BaseModel):
     product_id: UUID
     quantity: int
     updated_at: datetime
+    product: ProductInventoryResponse
 
     model_config = ConfigDict(from_attributes=True)
 

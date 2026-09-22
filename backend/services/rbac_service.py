@@ -22,6 +22,9 @@ PERMISSIONS = [
     "inventory.adjust",
 
     "dashboard.read",
+
+    "audit.read",
+
 ]
 
 

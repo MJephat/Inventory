@@ -7,6 +7,7 @@ from models.product import Product
 from models.inventory import Inventory
 from models.inventory_transaction import InventoryTransaction
 from core.auth import get_current_user
+from services.audit_log_service import AuditLogService
 
 from schema.inventory import (StockInRequest, StockOutRequest, StockAdjustmentRequest)
 
@@ -67,12 +68,23 @@ class InventoryService:
         )
 
         db.add(transaction)
+        #audit trail
+        AuditLogService.create(
+            db=db,
+            user_id=current_user.id,
+            action="STOCK_IN",
+            entity_type="Inventory",
+            entity_id=data.product_id,
+            description=f"Stocked in {data.quantity} units."
+        )
 
         db.commit()
 
         db.refresh(inventory)
 
         return inventory
+
+
 
 
     @staticmethod
@@ -132,12 +144,22 @@ class InventoryService:
         )
 
         db.add(transaction)
-
+        # Audit trail
+        AuditLogService.create(
+            db=db,
+            user_id=current_user.id,
+            action="STOCK_OUT",
+            entity_type="Inventory",
+            entity_id=data.product_id,
+            description=f"Stocked out {data.quantity} units."
+        )
         db.commit()
 
         db.refresh(inventory)
 
         return inventory
+
+
 
 
     @staticmethod
@@ -196,6 +218,15 @@ class InventoryService:
 
         db.add(transaction)
 
+        # Audit trail
+        AuditLogService.create(
+            db=db,
+            user_id=current_user.id,
+            action="STOCK_ADJUSTMENT",
+            entity_type="Inventory",
+            entity_id=data.product_id,
+            description=f"Inventory adjusted by {data.quantity} units."
+        )
         db.commit()
 
         db.refresh(inventory)
