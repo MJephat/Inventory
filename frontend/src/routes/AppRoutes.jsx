@@ -8,6 +8,7 @@ import ProductForm from "../pages/products/ProductForm";
 import Inventory from "../pages/inventory/inventory";
 import InventoryHistory from "../pages/inventory/InventoryHistory";
 import Categories from "../pages/categories/Categories";
+import AuditLogs from "../pages/auditLog/AuditLogs";
 
 
 
@@ -57,6 +58,10 @@ export default function AppRoutes() {
                 element={<Categories />}
               />
 
+            <Route
+                path="/audit-logs"
+                element={<AuditLogs />}
+              />
           </Route>
         </Route>
 
