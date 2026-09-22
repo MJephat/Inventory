@@ -6,7 +6,7 @@ const DashboardService = {
     return response.data;
   },
 
-  async getRecentActivity(limit = 10) {
+  async getRecentActivity(limit = 5) {
     const response = await api.get(
       `/dashboard/recent-activity?limit=${limit}`
     );
@@ -23,7 +23,7 @@ const DashboardService = {
     const [summary, recentActivity, lowStockProducts] =
       await Promise.all([
         this.getSummary(),
-        this.getRecentActivity(10),
+        this.getRecentActivity(5),
         this.getLowStockProducts(),
       ]);
 

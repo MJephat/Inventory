@@ -7,6 +7,7 @@ import Products from "../pages/products/products";
 import ProductForm from "../pages/products/ProductForm";
 import Inventory from "../pages/inventory/inventory";
 import InventoryHistory from "../pages/inventory/InventoryHistory";
+import Categories from "../pages/categories/Categories";
 
 
 
@@ -50,6 +51,11 @@ export default function AppRoutes() {
                 path="/inventory/:productId/history"
                 element={<InventoryHistory />}
                 />
+
+            <Route
+                path="/categories"
+                element={<Categories />}
+              />
 
           </Route>
         </Route>
