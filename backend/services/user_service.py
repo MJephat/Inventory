@@ -13,29 +13,57 @@ class UserService:
     @staticmethod
     def create_user(
         db: Session,
-        data: UserCreate
+        data
     ):
-        existing_user = db.scalar(
+        # Check username
+        existing_username = db.scalar(
             select(User).where(
-                or_(
-                    User.username == data.username,
-                    User.email == data.email
-                )
+                User.username == data.username
             )
         )
 
-        if existing_user:
+        if existing_username:
             raise ValueError(
-                "Username or email already exists."
+                "Username already exists."
             )
 
+        # Check email
+        existing_email = db.scalar(
+            select(User).where(
+                User.email == data.email
+            )
+        )
+
+        if existing_email:
+            raise ValueError(
+                "Email already exists."
+            )
+
+        # Find role
+        role = db.scalar(
+            select(Role).where(
+                Role.name == data.role
+            )
+        )
+
+        if not role:
+            raise ValueError(
+                f"Role '{data.role}' not found."
+            )
+
+        # Create user
         user = User(
             username=data.username,
             email=data.email,
             full_name=data.full_name,
-            password_hash=hash_password(data.password),
-            role=data.role
+            password_hash=hash_password(
+                data.password
+            ),
+            is_active=True,
         )
+
+        # Assign role through relationship
+        user.roles.append(role)
 
         db.add(user)
         db.commit()
