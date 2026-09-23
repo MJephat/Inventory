@@ -9,6 +9,7 @@ import Inventory from "../pages/inventory/inventory";
 import InventoryHistory from "../pages/inventory/InventoryHistory";
 import Categories from "../pages/categories/Categories";
 import AuditLogs from "../pages/auditLog/AuditLogs";
+import Users from "../pages/user/Users";
 
 
 
@@ -62,6 +63,11 @@ export default function AppRoutes() {
                 path="/audit-logs"
                 element={<AuditLogs />}
               />
+            
+            <Route
+              path="/users"
+              element={<Users />}
+            />
           </Route>
         </Route>
 
