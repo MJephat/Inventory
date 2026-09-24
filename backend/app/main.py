@@ -16,7 +16,7 @@ app = FastAPI(
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "https://inventory-frontend-iv0j.onrender.com"
+        "https://inventory-frontend-iv0j.onrender.com",
         "http://localhost:5173",
         "http://127.0.0.1:5173",
 
