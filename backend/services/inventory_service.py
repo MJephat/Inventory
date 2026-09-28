@@ -8,6 +8,8 @@ from models.inventory import Inventory
 from models.inventory_transaction import InventoryTransaction
 from core.auth import get_current_user
 from services.audit_log_service import AuditLogService
+from utils.reference_generator import generate_reference
+
 
 from schema.inventory import (StockInRequest, StockOutRequest, StockAdjustmentRequest)
 
@@ -18,7 +20,9 @@ class InventoryService:
     def stock_in(
         db: Session,
         data: StockInRequest,
-        current_user
+        current_user,
+        ip_address: str | None = None,
+
     ):
 
         # Check product
@@ -63,7 +67,7 @@ class InventoryService:
             transaction_type="STOCK_IN",
             quantity=data.quantity,
             balance_after=inventory.quantity,
-            reference=data.reference,
+            reference=generate_reference("STI"),
             reason=data.reason
         )
 
@@ -75,7 +79,8 @@ class InventoryService:
             action="STOCK_IN",
             entity_type="Inventory",
             entity_id=data.product_id,
-            description=f"Stocked in {data.quantity} units."
+            description=f"Stocked in {data.quantity} units.",
+            ip_address=ip_address,
         )
 
         db.commit()
@@ -91,7 +96,9 @@ class InventoryService:
     def stock_out(
         db: Session,
         data: StockOutRequest,
-        current_user
+        current_user,
+        ip_address: str | None = None,
+
     ):
 
         # Check product
@@ -139,7 +146,7 @@ class InventoryService:
             transaction_type="STOCK_OUT",
             quantity=-data.quantity,
             balance_after=inventory.quantity,
-            reference=data.reference,
+            reference=generate_reference("STO"),
             reason=data.reason
         )
 
@@ -151,7 +158,9 @@ class InventoryService:
             action="STOCK_OUT",
             entity_type="Inventory",
             entity_id=data.product_id,
-            description=f"Stocked out {data.quantity} units."
+            description=f"Stocked out {data.quantity} units.",
+            ip_address=ip_address,
+
         )
         db.commit()
 
@@ -166,7 +175,9 @@ class InventoryService:
     def adjust(
         db: Session,
         data: StockAdjustmentRequest,  
-        current_user
+        current_user,
+        ip_address: str | None = None,
+
 
     ):
 
@@ -213,6 +224,7 @@ class InventoryService:
             transaction_type="ADJUSTMENT",
             quantity=data.quantity,
             balance_after=new_quantity,
+            reference=generate_reference("ADJ"),
             reason=data.reason
         )
 
@@ -225,7 +237,8 @@ class InventoryService:
             action="STOCK_ADJUSTMENT",
             entity_type="Inventory",
             entity_id=data.product_id,
-            description=f"Inventory adjusted by {data.quantity} units."
+            description=f"Inventory adjusted by {data.quantity} units.",
+            ip_address=ip_address,
         )
         db.commit()
 

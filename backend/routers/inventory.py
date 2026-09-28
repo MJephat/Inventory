@@ -1,6 +1,6 @@
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Request
 from sqlalchemy import select
 from sqlalchemy.orm import Session, selectinload, joinedload
 
@@ -22,15 +22,18 @@ router = APIRouter(prefix="/inventory", tags=["Inventory"])
 @router.post("/stock-in",response_model=InventoryResponse)
 def stock_in(
     data: StockInRequest,
+    request: Request,
     db: Session = Depends(get_db),
     current_user = Depends(require_permission("inventory.stock_in"))
 
 ):
     try:
+        client_ip = request.client.host if request.client else None
         return InventoryService.stock_in(
             db,
             data,
-            current_user
+            current_user,
+            client_ip,
         )
 
     except ValueError as e:
@@ -44,14 +47,17 @@ def stock_in(
 @router.post("/stock-out", response_model=InventoryResponse)
 def stock_out(
     data: StockOutRequest,
+    request: Request,
     db: Session = Depends(get_db),
     current_user = Depends(require_permission("inventory.stock_out"))
 ):
     try:
+        client_ip = request.client.host if request.client else None
         return InventoryService.stock_out(
             db,
             data,
-            current_user
+            current_user,
+            client_ip,
         )
 
     except ValueError as e:
@@ -65,15 +71,18 @@ def stock_out(
 @router.post("/adjust", response_model=InventoryResponse)
 def adjust_stock(
     data: StockAdjustmentRequest,
+    request: Request,
     db: Session = Depends(get_db),
     current_user = Depends(require_permission("inventory.adjust"))
 ):
-
     try:
+        client_ip = request.client.host if request.client else None
+
         return InventoryService.adjust(
             db,
             data,
-            current_user
+            current_user,
+            client_ip,
         )
 
     except ValueError as e:
