@@ -204,7 +204,7 @@ export default function StockAdjustModal({ onClose, onSuccess }) {
 
           </div>
 
-          <div className="form-group">
+          {/* <div className="form-group">
 
             <label htmlFor="adjust-reference">
               Reference
@@ -220,7 +220,7 @@ export default function StockAdjustModal({ onClose, onSuccess }) {
               disabled={submitting}
             />
 
-          </div>
+          </div> */}
 
           <div className="form-group">
 

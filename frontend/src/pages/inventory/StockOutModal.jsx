@@ -195,7 +195,7 @@ export default function StockOutModal({ onClose, onSuccess }) {
           </div>
 
           {/* Reference */}
-          <div className="form-group">
+          {/* <div className="form-group">
 
             <label htmlFor="stock-out-reference">
               Reference
@@ -211,7 +211,7 @@ export default function StockOutModal({ onClose, onSuccess }) {
               disabled={submitting}
             />
 
-          </div>
+          </div> */}
 
           {/* Reason */}
           <div className="form-group">

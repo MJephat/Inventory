@@ -10,7 +10,6 @@ export default function StockInModal({ onClose, onSuccess }) {
   const [form, setForm] = useState({
     product_id: "",
     quantity: "",
-    reference: "",
     reason: "",
   });
 
@@ -27,11 +26,9 @@ export default function StockInModal({ onClose, onSuccess }) {
       setLoadingProducts(true);
       setError("");
 
-      const response =
-        await ProductService.getProducts();
+      const response = await ProductService.getProducts();
 
-      const productData =
-        response.data ?? response;
+      const productData = response.data ?? response;
 
       setProducts(productData);
     } catch (error) {
@@ -76,7 +73,6 @@ export default function StockInModal({ onClose, onSuccess }) {
       await InventoryService.stockIn({
         product_id: form.product_id,
         quantity: Number(form.quantity),
-        reference: form.reference.trim() || null,
         reason: form.reason.trim() || null,
       });
 
@@ -95,14 +91,10 @@ export default function StockInModal({ onClose, onSuccess }) {
 
   return (
     <div className="inventory-modal-overlay">
-
       <div className="inventory-modal">
-
         {/* Header */}
         <div className="inventory-modal-header">
-
           <div className="inventory-modal-title">
-
             <div className="inventory-modal-icon">
               <ArrowDownToLine size={19} />
             </div>
@@ -111,7 +103,6 @@ export default function StockInModal({ onClose, onSuccess }) {
               <h2>Stock In</h2>
               <p>Add stock to inventory</p>
             </div>
-
           </div>
 
           <button
@@ -122,7 +113,6 @@ export default function StockInModal({ onClose, onSuccess }) {
           >
             <X size={19} />
           </button>
-
         </div>
 
         {/* Form */}
@@ -130,7 +120,6 @@ export default function StockInModal({ onClose, onSuccess }) {
           className="inventory-modal-form"
           onSubmit={handleSubmit}
         >
-
           {error && (
             <div className="inventory-modal-error">
               {error}
@@ -139,7 +128,6 @@ export default function StockInModal({ onClose, onSuccess }) {
 
           {/* Product */}
           <div className="form-group">
-
             <label htmlFor="product_id">
               Product <span>*</span>
             </label>
@@ -149,9 +137,7 @@ export default function StockInModal({ onClose, onSuccess }) {
               name="product_id"
               value={form.product_id}
               onChange={handleChange}
-              disabled={
-                loadingProducts || submitting
-              }
+              disabled={loadingProducts || submitting}
               required
             >
               <option value="">
@@ -169,12 +155,10 @@ export default function StockInModal({ onClose, onSuccess }) {
                 </option>
               ))}
             </select>
-
           </div>
 
           {/* Quantity */}
           <div className="form-group">
-
             <label htmlFor="quantity">
               Quantity <span>*</span>
             </label>
@@ -191,31 +175,10 @@ export default function StockInModal({ onClose, onSuccess }) {
               disabled={submitting}
               required
             />
-
-          </div>
-
-          {/* Reference */}
-          <div className="form-group">
-
-            <label htmlFor="reference">
-              Reference
-            </label>
-
-            <input
-              id="reference"
-              name="reference"
-              type="text"
-              value={form.reference}
-              onChange={handleChange}
-              placeholder="e.g. PO-001"
-              disabled={submitting}
-            />
-
           </div>
 
           {/* Reason */}
           <div className="form-group">
-
             <label htmlFor="reason">
               Reason
             </label>
@@ -229,12 +192,10 @@ export default function StockInModal({ onClose, onSuccess }) {
               placeholder="e.g. Opening stock, supplier delivery..."
               disabled={submitting}
             />
-
           </div>
 
           {/* Actions */}
           <div className="inventory-modal-actions">
-
             <button
               type="button"
               className="modal-cancel-button"
@@ -247,9 +208,7 @@ export default function StockInModal({ onClose, onSuccess }) {
             <button
               type="submit"
               className="modal-submit-button"
-              disabled={
-                submitting || loadingProducts
-              }
+              disabled={submitting || loadingProducts}
             >
               <ArrowDownToLine size={16} />
 
@@ -257,13 +216,9 @@ export default function StockInModal({ onClose, onSuccess }) {
                 ? "Adding Stock..."
                 : "Add Stock"}
             </button>
-
           </div>
-
         </form>
-
       </div>
-
     </div>
   );
 }
